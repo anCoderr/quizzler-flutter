@@ -25,6 +25,19 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
+  List<Icon> correctAnsKeeper = [];
+  List<String> questionsKeeper = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.',
+  ];
+  List<bool> answerKeeper = [
+    false,
+    true,
+    true,
+  ];
+  int questionNumber = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +50,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questionsKeeper[questionNumber],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -61,7 +74,16 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                if (questionNumber < answerKeeper.length) {
+                  scoreKeeper.add(Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  ));
+                  answerChecker(questionNumber, true);
+                }
+                setState(() {
+                  questionNumber++;
+                });
               },
             ),
           ),
@@ -79,14 +101,42 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked false.
+                if (questionNumber < answerKeeper.length) {
+                  scoreKeeper.add(Icon(
+                    Icons.close,
+                    color: Colors.red,
+                  ));
+                  answerChecker(questionNumber, false);
+                }
+                setState(() {
+                  questionNumber++;
+                });
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        Row(
+          children: scoreKeeper,
+        ),
+        Row(
+          children: correctAnsKeeper,
+        )
       ],
     );
+  }
+
+  void answerChecker(int questionNumber, bool answer) {
+    if (answerKeeper[questionNumber] == answer) {
+      correctAnsKeeper.add(Icon(
+        Icons.star,
+        color: Colors.white,
+      ));
+    } else {
+      correctAnsKeeper.add(Icon(
+        Icons.star_border,
+        color: Colors.white38,
+      ));
+    }
   }
 }
 
